@@ -12,6 +12,8 @@ namespace StarterAssets
 		public Vector2 look;
 		public bool jump;
 		public bool sprint;
+		public bool crouch;
+		public bool kick;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -20,7 +22,7 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+		#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
@@ -43,7 +45,17 @@ namespace StarterAssets
 		{
 			SprintInput(value.isPressed);
 		}
-#endif
+
+		public void OnCrouch(InputValue value)
+		{
+			CrouchInput(value.isPressed);
+		}
+
+		public void OnKick(InputValue value)
+		{
+			KickInput(value.isPressed);
+		}
+		#endif
 
 
 		public void MoveInput(Vector2 newMoveDirection)
@@ -64,6 +76,16 @@ namespace StarterAssets
 		public void SprintInput(bool newSprintState)
 		{
 			sprint = newSprintState;
+		}
+
+		public void CrouchInput(bool newCrouchState)
+		{
+			crouch = newCrouchState;
+		}
+
+		public void KickInput(bool newKickState)
+		{
+			kick = newKickState;
 		}
 
 		private void OnApplicationFocus(bool hasFocus)

@@ -30,6 +30,11 @@ namespace StarterAssets
 
         public AudioClip LandingAudioClip;
         public AudioClip[] FootstepAudioClips;
+        public AudioClip[] KickAudioClips;
+        public GameObject[] KickEffects;
+        public GameObject[] FootstepEffects;
+        public GameObject EffectsSpawnPoint;
+
         [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
 
         [Space(10)]
@@ -159,6 +164,33 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+
+            if (Input.GetKeyDown("k"))
+            {
+              if (_animator.GetBool("Kick") == false)
+              {
+                _animator.SetBool("Kick", true);
+              }
+              else
+              {
+                _animator.SetBool("Kick", false);
+              }
+           
+            }
+
+            if (Input.GetKeyDown("c"))
+            {
+              if (_animator.GetBool("Crouch") == false)
+              {
+                _animator.SetBool("Crouch", true);
+              }
+              else
+              {
+                _animator.SetBool("Crouch", false);
+              }
+           
+            }
+
         }
 
         private void LateUpdate()
@@ -173,6 +205,7 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+         
         }
 
         private void GroundedCheck()
@@ -378,6 +411,32 @@ namespace StarterAssets
                     var index = Random.Range(0, FootstepAudioClips.Length);
                     AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
                 }
+                if (FootstepEffects.Length > 0)
+                {
+                    var index = Random.Range(0, FootstepEffects.Length);
+                    var effect = Instantiate(FootstepEffects[index], transform.TransformPoint(_controller.center), Quaternion.identity);
+                    Destroy(effect, 5f);
+                }
+            }
+        }
+
+        private void OnKick(AnimationEvent animationEvent)
+        {
+          // set transform to the position of the foot
+          // set rotation to the rotation of the foot
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                if (KickAudioClips.Length > 0)
+                {
+                    var index = Random.Range(0, KickAudioClips.Length);
+                    AudioSource.PlayClipAtPoint(KickAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                }
+                if (KickEffects.Length > 0)
+                {
+                    var index = Random.Range(0, KickEffects.Length);
+                    var effect = Instantiate(KickEffects[index], transform.TransformPoint(_controller.center), Quaternion.identity);
+                    Destroy(effect, 5f);
+                }
             }
         }
 
@@ -388,5 +447,6 @@ namespace StarterAssets
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
+
     }
 }
